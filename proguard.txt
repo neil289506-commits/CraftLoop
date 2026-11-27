@@ -67,3 +67,6 @@
 # https://proandroiddev.com/is-your-kotlin-code-really-obfuscated-a36abf033dde
 
 #-assumenosideeffects class kotlin.jvm.internal.Intrinsics { *; }
+
+# CraftLoop：找不到被引用類別只是警告，不應讓建置中止
+-ignorewarnings
