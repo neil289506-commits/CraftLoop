@@ -94,7 +94,7 @@ dependencies {
 
 easyMod {
     this.enableShadow = true
-    this.enableProGuard = true
+    this.enableProGuard = false
 
     this.shadowJarConfig = {
         relocate("org.antlr", "org.anti_ad.embedded.org.antlr")
