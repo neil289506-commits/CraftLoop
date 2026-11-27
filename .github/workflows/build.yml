@@ -37,7 +37,7 @@ jobs:
         run: |
           chmod +x ./gradlew
           ./gradlew ":platforms:${{ matrix.mc }}:build" \
-            --exclude-task compileTestJava \
+            --exclude-task proGuardTask --exclude-task compileTestJava \
             --exclude-task compileTestKotlin \
             --exclude-task test \
             --stacktrace
