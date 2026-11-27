@@ -37,7 +37,7 @@ jobs:
         run: |
           chmod +x ./gradlew
           ./gradlew ":platforms:${{ matrix.mc }}:build" \
-            --exclude-task proGuardTask --exclude-task compileTestJava \
+            --exclude-task proGuardTask --exclude-task easyMod-JarPostProcess --exclude-task compileTestJava \
             --exclude-task compileTestKotlin \
             --exclude-task test \
             --stacktrace
@@ -46,7 +46,7 @@ jobs:
         if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: IPN-${{ matrix.mc }}
+          name: CraftLoop-${{ matrix.mc }}
           path: platforms/${{ matrix.mc }}/build/libs/*.jar
           if-no-files-found: warn
 
