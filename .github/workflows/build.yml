@@ -1,0 +1,61 @@
+name: 建置 IPN（精簡版）
+
+on:
+  push:
+    branches: [ "**" ]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Fabric ${{ matrix.mc }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # 想建置 Forge／NeoForge 時，把對應的專案名稱加進來，例如 forge-26.2、neoforge-26.2
+        mc: [ "fabric-26.1.2", "fabric-26.2", "fabric-26.3" ]
+
+    steps:
+      - name: 取得原始碼
+        uses: actions/checkout@v4
+
+      - name: 安裝 JDK 25
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "25"
+
+      - name: 設定 Gradle（含快取）
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: 建置
+        run: |
+          chmod +x ./gradlew
+          ./gradlew ":platforms:${{ matrix.mc }}:build" \
+            --exclude-task compileTestJava \
+            --exclude-task compileTestKotlin \
+            --exclude-task test \
+            --stacktrace
+
+      - name: 上傳成品
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: IPN-${{ matrix.mc }}
+          path: platforms/${{ matrix.mc }}/build/libs/*.jar
+          if-no-files-found: warn
+
+      - name: 上傳建置報告（失敗時）
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-reports-${{ matrix.mc }}
+          path: |
+            **/build/reports/**
+            **/build/tmp/**/*.log
+          if-no-files-found: ignore
