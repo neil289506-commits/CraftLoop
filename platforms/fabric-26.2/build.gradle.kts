@@ -23,7 +23,6 @@ import net.darkhax.curseforgegradle.Constants
 import net.darkhax.curseforgegradle.TaskPublishCurseForge
 import java.net.URI
 
-val carpet_version: String? = "26.1-beta-9+v260311"
 val controlify_version: String? = "3.0.0+26.1-fabric" //"2.4.1+1.21.10-fabric"
 val yacl_version: String? = "3.9.0+26.1-fabric" //"3.8.1+1.21.11-fabric"
 
@@ -67,10 +66,6 @@ dependencies {
         }
     }
     compileOnly("org.jetbrains.kotlinx:kotlinx-serialization-core:[1.7.0,2)")
-
-    carpet_version?.let {
-        "compileOnly"("carpet:fabric-carpet:$carpet_version")
-    }
 
     yacl_version?.let {
         "compileOnly"("dev.isxander:yet-another-config-lib:$it") {

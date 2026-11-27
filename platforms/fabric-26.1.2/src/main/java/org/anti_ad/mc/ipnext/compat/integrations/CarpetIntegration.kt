@@ -34,9 +34,15 @@ class CarpetIntegration: IPNtoModIntegration {
     }
 
     private fun getEmptyShulkerMaxStack(): Int {
-        val rule = carpet.CarpetServer.settingsManager.getCarpetRule("stackableShulkerBoxes")
-        if (rule.type() == String::class.java) {
-            val value = rule.value() as String
+        // 以反射存取 Carpet，避免編譯期依賴（Carpet 為可選模組）
+        val rule = tryOrElse({ null }) {
+            val manager = Class.forName("carpet.CarpetServer").getField("settingsManager").get(null)
+            val managerType = Class.forName("carpet.api.settings.SettingsManager")
+            managerType.getMethod("getCarpetRule", String::class.java).invoke(manager, "stackableShulkerBoxes")
+        } ?: return 1
+        val ruleType = Class.forName("carpet.api.settings.CarpetRule")
+        if (ruleType.getMethod("type").invoke(rule) == String::class.java) {
+            val value = ruleType.getMethod("value").invoke(rule) as String
             return when (value.lowercase()) {
                 "true" -> {
                     64
